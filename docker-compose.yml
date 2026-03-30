@@ -2,18 +2,23 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
-    container_name: book_bloom_db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: book_bloom_db_mssql
     restart: always
     environment:
-      MYSQL_DATABASE: smart_library
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
-      MYSQL_USER: user
+      ACCEPT_EULA: Y
+      SA_PASSWORD: CineBook@1234
+      MSSQL_PID: Express
     ports:
-      - "3306:3306"
+      - "1433:1433"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/opt/mssql
+      - ./database/init:/init
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "CineBook@1234" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   app:
     build:
@@ -27,19 +32,22 @@ services:
         APP_URL: http://localhost
         FRONTEND_URL: http://localhost
         LOG_LEVEL: debug
-        DB_CONNECTION: mysql
+        DB_CONNECTION: sqlsrv
         DB_HOST: db
-        DB_PORT: 3306
+        DB_PORT: 1433
         DB_DATABASE: smart_library
-        DB_USERNAME: user
-        DB_PASSWORD: root
+        DB_USERNAME: sa
+        DB_PASSWORD: CineBook@1234
         VITE_BACKEND_ENDPOINT: http://localhost
-    container_name: book_bloom_app
+        SESSION_DRIVER: file
+        CACHE_DRIVER: file
+    container_name: book_bloom_app_mssql
     restart: always
     ports:
       - "80:80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
