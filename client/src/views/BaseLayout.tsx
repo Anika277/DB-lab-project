@@ -11,11 +11,13 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
   const navigate  = useNavigate();
   const location  = useLocation();   // lets us highlight the active nav link
   const token     = localStorage.getItem("token");
+  const isAdmin = localStorage.getItem("is_admin") === "true";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("is_admin");
     navigate("/login");
-  };
+};
 
   // ── Active link helper ─────────────────────────────────────────────────────
   // Returns true if the current URL matches this link's path.
@@ -82,21 +84,21 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
             <Link className="nav-link-item" to="/events"     style={navLinkStyle("/events")}>Events</Link>
 
             {/* My Library — only show when logged in */}
-            {token && (
-              <Link className="nav-link-item" to="/my-library" style={navLinkStyle("/my-library")}>
-                My Library
-              </Link>
-            )}
+            {token && !isAdmin && (
+  <Link className="nav-link-item" to="/my-library" style={navLinkStyle("/my-library")}>
+    My Library
+  </Link>
+)}
 
             <Link className="nav-link-item" to="/about" style={navLinkStyle("/about")}>About</Link>
 
             {/* Admin link — only show when logged in
                 (Admin.tsx will redirect away if the user isn't actually admin) */}
-            {token && (
-              <Link className="nav-link-item" to="/admin" style={navLinkStyle("/admin")}>
-                Admin
-              </Link>
-            )}
+            {token && isAdmin && (
+  <Link className="nav-link-item" to="/admin" style={navLinkStyle("/admin")}>
+    Admin
+  </Link>
+)}
 
             {/* Login/Logout button */}
             {token ? (

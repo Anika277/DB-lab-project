@@ -42,3 +42,101 @@ INSERT INTO books (title, author, cover_image, category_id, available_copies) VA
 ('Circe', 'Madeline Miller', 'https://books.google.com/books/content?id=XdZEDwAAQBAJ&printsec=frontcover&img=1&zoom=1', 5, 3),
 ('Normal People', 'Sally Rooney', 'https://books.google.com/books/content?id=s9hsDwAAQBAJ&printsec=frontcover&img=1&zoom=1', 4, 3);
 GO
+
+
+-- Seed event_categories
+INSERT INTO event_categories (name, slug, icon) VALUES
+('Book Club', 'book-club', '📖'),
+('Workshop', 'workshop', '✍️'),
+('Author Talk', 'author-talk', '🎤'),
+('Kids', 'kids', '🧒');
+GO
+
+-- Seed rooms
+INSERT INTO rooms (name, capacity) VALUES
+('Reading Room A', 30),
+('Reading Room B', 20),
+('Workshop Hall', 15),
+('Kids Corner', 25),
+('Auditorium', 50);
+GO
+
+-- Seed events (matching your screenshot)
+INSERT INTO events (title, description, event_category_id, room_id, event_date, event_time, max_seats, status) VALUES
+(
+    'Book Club: The Midnight Library',
+    'Join us for a cozy discussion of Matt Haig''s heartwarming novel about second chances and infinite possibilities.',
+    1, -- Book Club
+    2, -- Reading Room B
+    '2026-04-15',
+    '18:00',
+    20,
+    'published'
+),
+(
+    'Creative Writing Workshop',
+    'A hands-on workshop for aspiring writers. Bring a notebook and leave with the first page of your story.',
+    2, -- Workshop
+    3, -- Workshop Hall
+    '2026-04-20',
+    '15:00',
+    15,
+    'published'
+),
+(
+    'Author Talk: Local Voices',
+    'Meet three local authors as they share their journeys from first draft to published book.',
+    3, -- Author Talk
+    5, -- Auditorium
+    '2026-04-25',
+    '17:00',
+    50,
+    'published'
+),
+(
+    'Kids Storytime: Adventure Tales',
+    'An interactive storytelling session for children aged 5-10. Costumes encouraged!',
+    4, -- Kids
+    4, -- Kids Corner
+    '2026-04-18',
+    '10:00',
+    25,
+    'published'
+),
+(
+    'Book Club: Klara and the Sun',
+    'Explore Kazuo Ishiguro''s moving novel about artificial intelligence, love, and what it means to be human.',
+    1, -- Book Club
+    2, -- Reading Room B
+    '2026-05-01',
+    '18:00',
+    20,
+    'published'
+);
+GO
+
+-- Seed registrations (to match "7 of 20 seats left" and "3 of 15 seats left")
+-- 13 registrations for The Midnight Library (event_id = 1) → 7 of 20 left
+INSERT INTO event_registrations (user_id, event_id, status) VALUES
+(1, 1, 'confirmed'), (2, 1, 'confirmed'), (3, 1, 'confirmed'),
+(4, 1, 'confirmed'), (5, 1, 'confirmed'), (6, 1, 'confirmed'),
+(7, 1, 'confirmed'), (8, 1, 'confirmed'), (9, 1, 'confirmed'),
+(10, 1, 'confirmed'), (11, 1, 'confirmed'), (12, 1, 'confirmed'),
+(13, 1, 'confirmed');
+GO
+
+-- 12 registrations for Creative Writing Workshop (event_id = 2) → 3 of 15 left
+INSERT INTO event_registrations (user_id, event_id, status) VALUES
+(1, 2, 'confirmed'), (2, 2, 'confirmed'), (3, 2, 'confirmed'),
+(4, 2, 'confirmed'), (5, 2, 'confirmed'), (6, 2, 'confirmed'),
+(7, 2, 'confirmed'), (8, 2, 'confirmed'), (9, 2, 'confirmed'),
+(10, 2, 'confirmed'), (11, 2, 'confirmed'), (12, 2, 'confirmed');
+GO
+
+-- A few registrations for other events
+INSERT INTO event_registrations (user_id, event_id, status) VALUES
+(1, 3, 'confirmed'), (2, 3, 'confirmed'), (5, 3, 'confirmed'),
+(8, 3, 'confirmed'), (10, 3, 'confirmed'),
+(3, 4, 'confirmed'), (6, 4, 'confirmed'), (9, 4, 'confirmed');
+GO
+

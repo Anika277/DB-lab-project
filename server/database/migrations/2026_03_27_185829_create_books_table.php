@@ -9,15 +9,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('author');
-            $table->string('cover_image')->nullable();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->text('description')->nullable();
-            $table->integer('available_copies')->default(3);
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('title');
+    $table->string('author');
+    $table->string('cover_image')->nullable();
+    $table->foreignId('category_id')->constrained()->onDelete('cascade');
+    $table->text('description')->nullable();
+    $table->string('pdf_url')->nullable();
+    $table->integer('available_copies')->default(3);
+    $table->timestamps();
+});
     }
 
     public function down()

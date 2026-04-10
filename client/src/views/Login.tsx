@@ -26,9 +26,14 @@ export default function Login() {
     setLoading(false);
 
     if (data?.token) {
-      localStorage.setItem("token", data.token);
-      toast.success("Login successful!");
-      navigate("/");
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("is_admin", data.user?.is_admin ? "true" : "false");
+    toast.success("Login successful!");
+if (data.user?.is_admin) {
+    navigate("/admin")
+} else {
+    navigate("/my-library")
+}
     }
   };
 

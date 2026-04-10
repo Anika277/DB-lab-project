@@ -86,3 +86,71 @@ BEGIN
     );
 END
 GO
+
+GO
+
+-- Create event_categories table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='event_categories' AND xtype='U')
+BEGIN
+    CREATE TABLE event_categories (
+        id BIGINT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        slug NVARCHAR(255) NOT NULL UNIQUE,
+        icon NVARCHAR(255) NULL,
+        created_at DATETIME2 DEFAULT GETDATE(),
+        updated_at DATETIME2 DEFAULT GETDATE()
+    );
+END
+GO
+
+-- Create rooms table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='rooms' AND xtype='U')
+BEGIN
+    CREATE TABLE rooms (
+        id BIGINT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        capacity INT NOT NULL DEFAULT 20,
+        created_at DATETIME2 DEFAULT GETDATE(),
+        updated_at DATETIME2 DEFAULT GETDATE()
+    );
+END
+GO
+
+-- Create events table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='events' AND xtype='U')
+BEGIN
+    CREATE TABLE events (
+        id BIGINT IDENTITY(1,1) PRIMARY KEY,
+        title NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX) NULL,
+        event_category_id BIGINT NOT NULL,
+        room_id BIGINT NOT NULL,
+        event_date DATE NOT NULL,
+        event_time TIME NOT NULL,
+        max_seats INT NOT NULL DEFAULT 20,
+        status NVARCHAR(50) DEFAULT 'published',
+        created_at DATETIME2 DEFAULT GETDATE(),
+        updated_at DATETIME2 DEFAULT GETDATE(),
+        FOREIGN KEY (event_category_id) REFERENCES event_categories(id),
+        FOREIGN KEY (room_id) REFERENCES rooms(id)
+    );
+END
+GO
+
+-- Create event_registrations table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='event_registrations' AND xtype='U')
+BEGIN
+    CREATE TABLE event_registrations (
+        id BIGINT IDENTITY(1,1) PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        event_id BIGINT NOT NULL,
+        status NVARCHAR(50) DEFAULT 'confirmed',
+        registered_at DATETIME2 DEFAULT GETDATE(),
+        created_at DATETIME2 DEFAULT GETDATE(),
+        updated_at DATETIME2 DEFAULT GETDATE(),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (event_id) REFERENCES events(id),
+        CONSTRAINT UQ_user_event UNIQUE (user_id, event_id)
+    );
+END
+GO

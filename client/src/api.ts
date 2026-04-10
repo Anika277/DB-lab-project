@@ -156,6 +156,34 @@ class ApiClient {
     }
   }
 
+  async getEvents() {
+    try {
+        const response = await this.client.get('/api/events');
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+}
+
+async getEvent(id: number) {
+    try {
+        const response = await this.client.get(`/api/events/${id}`);
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+}
+
+async registerForEvent(id: number, data: { name: string; mobile: string; email: string; note: string }) {
+    try {
+        const response = await this.client.post(`/api/events/${id}/register`, data);
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+}
+
+
   // ── Error handler ───────────────────────────────────────────────────────────
 
   handleError(error: any) {
@@ -168,6 +196,46 @@ class ApiClient {
     }
     toast.error(error.response?.data?.message || error.message || 'Something went wrong');
   }
+
+  async payFine(borrowId: number, paymentMethod: string) {
+    try {
+        const response = await this.client.post(`/api/pay-fine/${borrowId}`, {
+            payment_method: paymentMethod
+        });
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+}
+
+async confirmFine(borrowId: number) {
+    try {
+        const response = await this.client.post(`/api/admin/confirm-fine/${borrowId}`);
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+  }
+
+  async updateBook(id: number, data: { title: string; author: string; available_copies: number }) {
+    try {
+        const response = await this.client.put(`/api/books/${id}`, data);
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+  }
+
+  async getAuditLogs() {
+    try {
+        const response = await this.client.get('/api/admin/audit-logs');
+        return response.data;
+    } catch (error) {
+        this.handleError(error);
+    }
+}
+
+
 }
 
 export default ApiClient;
