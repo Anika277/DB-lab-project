@@ -16,8 +16,8 @@ BEGIN
         name NVARCHAR(255) NOT NULL,
         email NVARCHAR(255) NOT NULL UNIQUE,
         password NVARCHAR(255) NOT NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
+        created_at DATETIME2 DEFAULT GETDATE()
+        
     );
 END
 GO
@@ -27,9 +27,9 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='categories' AND xtype='U')
 BEGIN
     CREATE TABLE categories (
         id BIGINT IDENTITY(1,1) PRIMARY KEY,
-        name NVARCHAR(255) NOT NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
+        name NVARCHAR(255) NOT NULL
+      
+       
     );
 END
 GO
@@ -44,10 +44,8 @@ BEGIN
         cover_image NVARCHAR(500) NULL,
         category_id BIGINT NOT NULL,
         description NVARCHAR(MAX) NULL,
-        available_copies INT DEFAULT 3,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
-        FOREIGN KEY (category_id) REFERENCES categories(id)
+        available_copies INT DEFAULT 3
+      FOREIGN KEY (category_id) REFERENCES categories(id)
     );
 END
 GO
@@ -61,8 +59,6 @@ BEGIN
         book_id BIGINT NOT NULL,
         borrowed_at DATETIME2 DEFAULT GETDATE(),
         returned_at DATETIME2 NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (book_id) REFERENCES books(id)
     );
@@ -80,9 +76,9 @@ BEGIN
         token NVARCHAR(64) NOT NULL UNIQUE,
         abilities NVARCHAR(MAX) NULL,
         last_used_at DATETIME2 NULL,
-        expires_at DATETIME2 NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
+        expires_at DATETIME2 NULL
+       
+       
     );
 END
 GO
@@ -97,8 +93,8 @@ BEGIN
         name NVARCHAR(255) NOT NULL,
         slug NVARCHAR(255) NOT NULL UNIQUE,
         icon NVARCHAR(255) NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
+        created_at DATETIME2 DEFAULT GETDATE()
+        
     );
 END
 GO
@@ -109,9 +105,9 @@ BEGIN
     CREATE TABLE rooms (
         id BIGINT IDENTITY(1,1) PRIMARY KEY,
         name NVARCHAR(255) NOT NULL,
-        capacity INT NOT NULL DEFAULT 20,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
+        capacity INT NOT NULL DEFAULT 20
+       
+       
     );
 END
 GO
@@ -129,8 +125,6 @@ BEGIN
         event_time TIME NOT NULL,
         max_seats INT NOT NULL DEFAULT 20,
         status NVARCHAR(50) DEFAULT 'published',
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
         FOREIGN KEY (event_category_id) REFERENCES event_categories(id),
         FOREIGN KEY (room_id) REFERENCES rooms(id)
     );
@@ -146,8 +140,6 @@ BEGIN
         event_id BIGINT NOT NULL,
         status NVARCHAR(50) DEFAULT 'confirmed',
         registered_at DATETIME2 DEFAULT GETDATE(),
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (event_id) REFERENCES events(id),
         CONSTRAINT UQ_user_event UNIQUE (user_id, event_id)
